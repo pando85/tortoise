@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
-from api import TagSerializer, TaskSerializer, UserSerializer
+from main.api import TagSerializer, TaskSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
