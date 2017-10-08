@@ -1,9 +1,10 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
-from rest_framework.response import Response
-from main.api import TagSerializer, TaskSerializer, UserSerializer
+
+from tortoise.api.serializers import (TagSerializer,
+    TaskSerializer, UserSerializer)
+from tortoise.main.models.user import User
+from tortoise.main.models.tag import Tag
+from tortoise.main.models.task import Task
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,6 +20,3 @@ class TagViewSet(viewsets.ModelViewSet):
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-
-
-

@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 
-from tortoise.main.models.user import User
-from tortoise.main.models.tag import Tag
+from .user import User
+from .tag import Tag
 
 
 class Task(models.Model):

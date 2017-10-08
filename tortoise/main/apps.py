@@ -5,4 +5,5 @@ from django.apps import AppConfig
 
 
 class MainConfig(AppConfig):
-    name = 'main'
+    name = 'tortoise.main'
+    verbose_name = 'Main'

@@ -9,12 +9,18 @@ check_requirements:
 	@diff requirements.txt freeze.txt > /dev/null 2>&1 || ${VENV_BIN}/pip install -r requirements.txt
 	@rm freeze.txt
 
-run: .venv check_requirements
+makemigrations:
+	${VENV_BIN}/python manage.py makemigrations
+
+migrate:
+	${VENV_BIN}/python manage.py migrate
+
+run: .venv check_requirements makemigrations migrate
 	${VENV_BIN}/python manage.py runserver
 
 test: .venv
 	${VENV_BIN}/python manage.py test
-	
+
 clean:
 	rm -rf .venv
 
