@@ -1,13 +1,18 @@
-VENV_BIN := .venv/bin
+VENV_BASE += .venv
+VENV_BIN := $(VENV_BASE)/bin
+PROJECT := tortoise
 
-.venv:
-	virtualenv -p python3 .venv
+.PHONY: venv requirements requirements_dev makemigrations migrate run \
+		test reports pep8 falke8 check clean
+
+venv:
+	virtualenv -p python3 $(VENV_BASE)
+
+requirements: venv
 	${VENV_BIN}/pip install -r requirements.txt
 
-check_requirements:
-	@${VENV_BIN}/pip freeze > freeze.txt
-	@diff requirements.txt freeze.txt > /dev/null 2>&1 || ${VENV_BIN}/pip install -r requirements.txt
-	@rm freeze.txt
+requirements_dev: requirements
+	${VENV_BIN}/pip install -r requirements_dev.txt
 
 makemigrations:
 	${VENV_BIN}/python manage.py makemigrations
@@ -15,13 +20,22 @@ makemigrations:
 migrate:
 	${VENV_BIN}/python manage.py migrate
 
-run: .venv check_requirements makemigrations migrate
+run: venv requirements makemigrations migrate
 	${VENV_BIN}/python manage.py runserver
 
-test: .venv
+test: venv
 	${VENV_BIN}/python manage.py test
 
-clean:
-	rm -rf .venv
+reports:
+	mkdir -p $@
 
-.PHONY: run check_requirements
+pep8: requirements_dev reports
+	@(set -o pipefail && $@ | tee reports/$@.report)
+
+flake8: requirements_dev reports
+	@(set -o pipefail && $@ | tee reports/$@.report)
+
+check: pep8 flake8
+
+clean:
+	rm -rf $(VENV_BASE)

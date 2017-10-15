@@ -103,3 +103,6 @@ venv.bak/
 
 # sqlite3
 *.sqlite3
+
+# Other
+reports
