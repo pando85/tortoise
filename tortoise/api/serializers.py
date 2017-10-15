@@ -1,21 +1,23 @@
 from rest_framework import serializers
-from main.models import Tag, Task, User
+
+from tortoise.main.models.user import User
+from tortoise.main.models.tag import Tag
+from tortoise.main.models.task import Task
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('name')
+        fields = ['name']
 
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        field = ('title', 'description', 'creation_date', 'deadline')
-    # Foreing key and Many-to-Many relations ????
+        fields = ('title', 'description', 'deadline', 'members', 'tags')
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        field = ('username', 'email', 'date_joined')
+        fields = '__all__'
