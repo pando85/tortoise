@@ -3,7 +3,7 @@ VENV_BIN := $(VENV_BASE)/bin
 PROJECT := tortoise
 
 .PHONY: venv requirements requirements_dev makemigrations migrate run \
-		test reports pep8 falke8 check clean
+		test pep8 falke8 check clean
 
 venv:
 	virtualenv -p python3 $(VENV_BASE)
@@ -26,14 +26,11 @@ run: venv requirements makemigrations migrate
 test: venv
 	${VENV_BIN}/python manage.py test
 
-reports:
-	mkdir -p $@
+pep8: requirements_dev
+	$@
 
-pep8: requirements_dev reports
-	@(set -o pipefail && $@ | tee reports/$@.report)
-
-flake8: requirements_dev reports
-	@(set -o pipefail && $@ | tee reports/$@.report)
+flake8: requirements_dev
+	$@
 
 check: pep8 flake8
 
