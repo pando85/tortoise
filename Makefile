@@ -27,10 +27,10 @@ test: venv
 	${VENV_BIN}/python manage.py test
 
 pep8: requirements_dev
-	$@
+	${VENV_BIN}/$@
 
 flake8: requirements_dev
-	$@
+	${VENV_BIN}/$@
 
 check: pep8 flake8
 
