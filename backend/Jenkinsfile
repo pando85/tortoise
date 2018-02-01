@@ -1,0 +1,19 @@
+#!groovy
+
+node('python') {
+
+    stage('Checkout'){
+        checkout scm
+    }
+
+    dir('backend') {
+
+	    stage('Check code'){
+	        sh 'make check'
+	    }
+
+	    stage('Test'){
+	        sh 'make test'
+	    }
+    }
+}
