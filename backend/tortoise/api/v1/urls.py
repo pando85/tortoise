@@ -4,10 +4,9 @@ from rest_framework.authtoken import views
 from rest_framework.routers import SimpleRouter
 from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='Tortoise API')
-
 from .views import UserViewSet, TagViewSet, TaskViewSet
 
+schema_view = get_swagger_view(title='Tortoise API')
 router = SimpleRouter()
 router.register(r'users', UserViewSet)
 router.register(r'tags', TagViewSet)

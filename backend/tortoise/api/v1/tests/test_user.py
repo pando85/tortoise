@@ -1,11 +1,9 @@
 
 from django.urls import reverse
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from tortoise.main.models.user import User
-from tortoise.api.v1.views import UserViewSet
 
 
 class CreateUserTest(APITestCase):
@@ -22,6 +20,7 @@ class CreateUserTest(APITestCase):
         self.assertEqual(User.objects.count(), 1)
         self.assertEqual(User.objects.get().username, self.data['username'])
 
+
 class UpdateUserTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='foo', password='foo')
@@ -33,8 +32,9 @@ class UpdateUserTest(APITestCase):
         """
         data = {'username': 'foo', 'password': 'boo'}
         url = reverse('v1:user-detail', args=[data['username']])
-        response = self.client.put(url , data, format='json')
+        response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 class PermissionsUserTest(APITestCase):
     def setUp(self):
@@ -65,5 +65,5 @@ class PermissionsUserTest(APITestCase):
         """
         data = {'username': 'boo', 'password': 'foo'}
         url = reverse('v1:user-detail', args=[data['username']])
-        response = self.client.put(url , data, format='json')
+        response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

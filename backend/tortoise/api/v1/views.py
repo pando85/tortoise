@@ -1,10 +1,7 @@
 from django.db.models import Q
 
 from rest_framework import viewsets
-from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from tortoise.api.v1.serializers import (
     TagSerializer, TaskSerializer, UserSerializer)
@@ -28,6 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
         instance = serializer.save()
         instance.set_password(instance.password)
         instance.save()
+
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
