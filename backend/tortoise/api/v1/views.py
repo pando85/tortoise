@@ -3,7 +3,7 @@ from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from tortoise.api.serializers import (
+from tortoise.api.v1.serializers import (
     TagSerializer, TaskSerializer, UserSerializer)
 from tortoise.main.models.user import User
 from tortoise.main.models.tag import Tag
@@ -19,10 +19,12 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsItself, )
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return []
-        return [self.request.user]
+        return User.objects.filter(id=self.request.user.id)
 
+    def perform_create(self, serializer):
+        instance = serializer.save()
+        instance.set_password(instance.password)
+        instance.save()
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
