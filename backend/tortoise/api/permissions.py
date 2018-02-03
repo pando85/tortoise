@@ -15,3 +15,12 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Instance must have an attribute named `owner`.
         return obj.owner == request.user
+
+
+class IsItself(permissions.BasePermission):
+    """
+    Object-level permission to only allow itself to edit and read it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        return obj == request.user

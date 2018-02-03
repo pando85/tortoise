@@ -9,17 +9,25 @@ from tortoise.main.models.user import User
 from tortoise.main.models.tag import Tag
 from tortoise.main.models.task import Task
 
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsItself
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    lookup_field = 'username'
+    permission_classes = (IsItself, )
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return []
+        return [self.request.user]
 
 
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    permission_classes = (IsAuthenticated, )
 
 
 class TaskViewSet(viewsets.ModelViewSet):
