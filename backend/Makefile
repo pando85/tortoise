@@ -6,7 +6,9 @@ PROJECT := tortoise
 		test pep8 falke8 check clean
 
 venv:
-	virtualenv -p python3 $(VENV_BASE)
+	if [ ! -d "$(VENV_BASE)" ]; then \
+		virtualenv -p python3 $(VENV_BASE); \
+	fi
 
 requirements: venv
 	${VENV_BIN}/pip install -r requirements.txt
@@ -23,7 +25,7 @@ migrate:
 run: venv requirements makemigrations migrate
 	${VENV_BIN}/python manage.py runserver
 
-test: venv
+test: check
 	${VENV_BIN}/python manage.py test
 
 pep8: requirements_dev
