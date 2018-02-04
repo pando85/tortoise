@@ -1,5 +1,6 @@
 from django.db.models import Q
 
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -37,6 +38,8 @@ class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.none()
     serializer_class = TaskSerializer
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = '__all__'
 
     def get_queryset(self):
         return Task.objects.filter(
