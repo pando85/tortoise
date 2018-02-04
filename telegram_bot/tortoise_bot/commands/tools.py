@@ -24,6 +24,6 @@ def beauty_tasks(tasks):
             output += f"    tags:{task['tags']}\n"
 
         if task['members']:
-            output += f"    tags:{task['members']}\n"
+            output += f"    members:{task['members']}\n"
         output += "\n"
     return output
