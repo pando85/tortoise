@@ -8,7 +8,17 @@ from tortoise_bot.commands.tools import parse_match
 def add_commands_tasks(bot):
     @bot.command(r"/tasks get\ *(.*)")
     async def get_tasks(chat: aiotg.Chat, match):
-        tasks = await bot.clients[chat.id].get_tasks()
+        parser = argparse.ArgumentParser(
+            prog='tasks get', description='Command to get tasks')
+        parser.add_argument(
+            '-f',
+            '--filter',
+            help="add filters. Ex: -f 'title=buy soap'")
+        args = parse_match(match.group(1), parser)
+        _filter = None
+        if args:
+            _filter = args.filter
+        tasks = await bot.clients[chat.id].get_tasks(_filter)
         tasks_filtered = [
             {k: v for k, v in task.items() if v}
             for task in tasks]

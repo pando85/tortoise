@@ -58,8 +58,11 @@ class TortoiseClient(object):
                 async with curl(API_URL + url, headers=header) as response:
                     return response
 
-    async def get_tasks(self):
-        response = await self._api_call('get', 'tasks/', expected_status=[200])
+    async def get_tasks(self, _filter=None):
+        if not _filter:
+            _filter = ''
+        response = await self._api_call(
+            'get', 'tasks/?' + _filter, expected_status=[200])
         return await response.json()
 
     async def create_task(self, task):
