@@ -1,0 +1,15 @@
+#!groovy
+
+node('python') {
+
+    stage('Checkout'){
+        checkout scm
+    }
+
+    dir('telegram_bot') {
+
+	    stage('Check code'){
+	        sh 'make check'
+	    }
+    }
+}
