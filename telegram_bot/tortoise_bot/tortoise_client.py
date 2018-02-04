@@ -37,12 +37,12 @@ class TortoiseClient(object):
                 raise GetTokenError(await response)
 
     async def _api_call(
-            self, method, url, token, data=None, expected_status=None):
-        header = {"Authorization": "Token " + token}
+            self, method, url, data=None, expected_status=None):
+        header = {"Authorization": "Token " + self.token}
         response = await self._request(method, url, data, header)
-        if response.status != expected_status:
+        if response.status not in expected_status:
             raise ExpectedStatusError(response)
-        return await response.json()
+        return response
 
     async def _request(self, method, url, data, header):
         if method not in ['get', 'post', 'put']:
@@ -59,15 +59,23 @@ class TortoiseClient(object):
                     return response
 
     async def get_tasks(self):
-        return await self._call_tasks('get', 200)
+        response = await self._api_call('get', 'tasks/', expected_status=[200])
+        return await response.json()
 
     async def create_task(self, task):
-        return await self._call_tasks('post', 201, data=task)
-
-    async def _call_tasks(self, method, expected_status, data=None):
         return await self._api_call(
-            method,
+            'post',
             'tasks/',
-            self.token,
-            data=data,
-            expected_status=expected_status)
+            expected_status=[201, 400],
+            data=task)
+
+    async def get_tags(self):
+        response = await self._api_call('get', 'tags/', expected_status=[200])
+        return await response.json()
+
+    async def create_tag(self, tag):
+        return await self._api_call(
+            'post',
+            'tags/',
+            expected_status=[201, 400],
+            data=tag)
