@@ -11,16 +11,16 @@ class TaskTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create(
             username="will", email="will@example.com")
-        Task.objects.create(title="Buy soap", owner=self.user)
+        Task.objects.create(name="Buy soap", owner=self.user)
 
     def test_task_created(self):
-        example_task = Task.objects.get(title="Buy soap")
+        example_task = Task.objects.get(name="Buy soap")
         example_task.full_clean()
-        self.assertEqual(example_task.title, "Buy soap")
+        self.assertEqual(example_task.name, "Buy soap")
 
     def test_task_invalid_deadline(self):
         now = timezone.now()
         with self.assertRaises(ValidationError):
             a = Task.objects.create(
-                title="Test deadline", owner=self.user, deadline=now)
+                name="Test deadline", owner=self.user, deadline=now)
             a.full_clean()

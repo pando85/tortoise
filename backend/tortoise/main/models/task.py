@@ -6,7 +6,7 @@ from .tag import Tag
 
 
 class Task(models.Model):
-    title = models.CharField(max_length=80)
+    name = models.CharField(max_length=80)
     description = models.CharField(max_length=500, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField(blank=True, null=True)

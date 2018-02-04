@@ -14,7 +14,7 @@ class TagSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('title', 'description', 'deadline', 'members', 'tags')
+        fields = ('name', 'description', 'deadline', 'members', 'tags')
 
 
 class UserSerializer(serializers.ModelSerializer):

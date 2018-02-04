@@ -1,8 +1,7 @@
 import aiotg
 import argparse
-import yaml
 
-from tortoise_bot.commands.tools import parse_match
+from tortoise_bot.commands.tools import parse_match, beauty_tasks
 
 
 def add_commands_tasks(bot):
@@ -13,18 +12,15 @@ def add_commands_tasks(bot):
         parser.add_argument(
             '-f',
             '--filter',
-            help="add filters. Ex: -f 'title=buy soap'")
+            help="add filters. Ex: -f 'name=buy soap'")
         args = parse_match(match.group(1), parser)
         _filter = None
         if args:
             _filter = args.filter
         tasks = await bot.clients[chat.id].get_tasks(_filter)
-        tasks_filtered = [
-            {k: v for k, v in task.items() if v}
-            for task in tasks]
-        tasks_yml = yaml.dump(tasks_filtered, default_flow_style=False)
+        tasks_markdown = beauty_tasks(tasks)
         if tasks:
-            return chat.send_text(tasks_yml)
+            return chat.send_text(tasks_markdown, parse_mode='Markdown')
         return
 
     @bot.command(r"/tasks add\ *(.*)")
@@ -34,7 +30,7 @@ def add_commands_tasks(bot):
         required_group_parser = parser.add_argument_group('required arguments')
         required_group_parser.add_argument(
             '-t',
-            '--title',
+            '--name',
             required=True)
         parser.add_argument(
             '-d',
@@ -52,7 +48,7 @@ def add_commands_tasks(bot):
             chat.send_text(parser.format_help())
             return
         task = {}
-        task.update({'title': args.title})
+        task.update({'name': args.name})
         if args.description:
             task.update({'description': args.description})
         if args.deadline:
