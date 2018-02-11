@@ -1,8 +1,8 @@
 import aiotg
 import argparse
 
-from tortoise_bot.tortoise_client import TortoiseClient
-from tortoise_bot.commands.tools import parse_match
+from tortoise_bot.tortoise_client import TortoiseClient, GetTokenError
+from tortoise_bot.commands.tools import parse_match, get_response_from_error
 
 
 def add_commands_login(bot):
@@ -28,8 +28,15 @@ def add_commands_login(bot):
         telegram_id = chat.id
         user = args.username
         password = args.password
-        tortoise_client = await TortoiseClient.create(user, password)
-        bot.clients.update({telegram_id: tortoise_client})
-        chat.send_text(bot.clients[telegram_id].token)
+
+        try:
+            tortoise_client = await TortoiseClient.create(user, password)
+            bot.clients.update({telegram_id: tortoise_client})
+            chat.send_text('Successfully login!')
+        except GetTokenError as error:
+            chat.send_text('Login failed!')
+            response = get_response_from_error(error)
+            response_body = await response.read()
+            chat.send_text('Error: \n' + response_body.decode('utf-8'))
         return
     return bot

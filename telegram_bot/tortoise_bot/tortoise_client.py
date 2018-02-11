@@ -34,7 +34,7 @@ class TortoiseClient(object):
                     if 'token' in (await response.json()).keys():
                         token = (await response.json())['token']
                         return token
-                raise GetTokenError(await response)
+                raise GetTokenError(response)
 
     async def _api_call(
             self, method, url, data=None, expected_status=None):

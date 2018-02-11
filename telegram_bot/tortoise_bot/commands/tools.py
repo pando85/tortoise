@@ -27,3 +27,8 @@ def beauty_tasks(tasks):
             output += f"    members:{task['members']}\n"
         output += "\n"
     return output
+
+
+def get_response_from_error(error):
+    response, = error.args
+    return response
