@@ -4,16 +4,36 @@ import argparse
 from tortoise_bot.commands.tools import parse_match, beauty_tasks
 
 
+def get_get_tasks_parser():
+    parser = argparse.ArgumentParser(
+        prog='tasks get', description='Command to get tasks')
+    parser.add_argument(
+        '-f',
+        '--filter',
+        help="add filters. Ex: -f 'name=buy soap'")
+    return parser
+
+
+def get_add_tasks_parser():
+    parser = argparse.ArgumentParser(
+        prog='tasks add', description='Command to create new tasks')
+    required_group_parser = parser.add_argument_group('required arguments')
+    required_group_parser.add_argument('-t', '--name', required=True)
+    parser.add_argument('-d', '--description')
+    parser.add_argument('--deadline')
+    parser.add_argument('-m', '--members')
+    parser.add_argument('--tags')
+    return parser
+
+
 def add_commands_tasks(bot):
     @bot.command(r"/tasks get\ *(.*)")
     async def get_tasks(chat: aiotg.Chat, match):
-        parser = argparse.ArgumentParser(
-            prog='tasks get', description='Command to get tasks')
-        parser.add_argument(
-            '-f',
-            '--filter',
-            help="add filters. Ex: -f 'name=buy soap'")
+        parser = get_get_tasks_parser()
         args = parse_match(match.group(1), parser)
+        if not args:
+            chat.send_text(parser.format_help())
+            return
         _filter = None
         if args:
             _filter = args.filter
@@ -24,25 +44,8 @@ def add_commands_tasks(bot):
         return
 
     @bot.command(r"/tasks add\ *(.*)")
-    async def create_task(chat: aiotg.Chat, match):
-        parser = argparse.ArgumentParser(
-            prog='tasks add', description='Command to create new tasks')
-        required_group_parser = parser.add_argument_group('required arguments')
-        required_group_parser.add_argument(
-            '-t',
-            '--name',
-            required=True)
-        parser.add_argument(
-            '-d',
-            '--description')
-        parser.add_argument(
-            '--deadline')
-        parser.add_argument(
-            '-m',
-            '--members')
-        parser.add_argument(
-            '--tags')
-
+    async def add_tasks(chat: aiotg.Chat, match):
+        parser = get_add_tasks_parser()
         args = parse_match(match.group(1), parser)
         if not args:
             chat.send_text(parser.format_help())

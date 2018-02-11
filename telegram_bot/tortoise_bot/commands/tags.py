@@ -5,9 +5,29 @@ import yaml
 from tortoise_bot.commands.tools import parse_match
 
 
+def get_get_tags_parser():
+    parser = argparse.ArgumentParser(
+        prog='tasks get', description='Command to get tags')
+    return parser
+
+
+def get_add_tags_parser():
+    parser = argparse.ArgumentParser(
+        prog='tags add', description='Command to create new tag')
+    parser.add_argument(
+        'tags', metavar='TAG', type=str, nargs='+',
+        help='new tags to create separated by spaces')
+    return parser
+
+
 def add_commands_tags(bot):
     @bot.command(r"/tags get\ *(.*)")
     async def get_tags(chat: aiotg.Chat, match):
+        parser = get_get_tags_parser()
+        args = parse_match(match.group(1), parser)
+        if not args:
+            chat.send_text(parser.format_help())
+            return
         tags = await bot.clients[chat.id].get_tags()
         tags_yml = yaml.dump(tags, default_flow_style=False)
         if tags:
@@ -15,12 +35,8 @@ def add_commands_tags(bot):
         return
 
     @bot.command(r"/tags add\ *(.*)")
-    async def create_tags(chat: aiotg.Chat, match):
-        parser = argparse.ArgumentParser(
-            prog='tags add', description='Command to create new tag')
-        parser.add_argument(
-            'tags', metavar='TAG', type=str, nargs='+',
-            help='new tags to create separated by spaces')
+    async def add_tags(chat: aiotg.Chat, match):
+        parser = get_add_tags_parser()
         args = parse_match(match.group(1), parser)
         if not args:
             chat.send_text(parser.format_help())
