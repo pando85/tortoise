@@ -12,7 +12,7 @@ def get_parser():
         default=os.environ.get('TORTOISE_TOKEN', None))
 
     main_parser.add_argument(
-        "-u", "--username", help="tortoise user using basic auth")
+        "-u", "--username", help="tortoise username using basic auth")
 
     main_parser.add_argument(
         "-p", "--password", help="tortoise password using basic auth")

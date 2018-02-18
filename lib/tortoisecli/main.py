@@ -22,11 +22,8 @@ def main():
     else:
         client = TortoiseClient.create_with_token(args.url, args.token)
 
-    try:
-        result = loop.run_until_complete(
-            client.api_call(args.command, args.resource, data))
-    finally:
-        loop.close()
+    result = loop.run_until_complete(
+        client.api_call(args.command, args.resource, data))
 
     beautyPrint.print(result, args.resource)
 
