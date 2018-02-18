@@ -5,7 +5,3 @@ class ExpectedStatusError(Exception):
 
 class GetTokenError(Exception):
     pass
-
-
-class MethodNotAllowed(Exception):
-    pass
