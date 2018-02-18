@@ -16,7 +16,7 @@ def main():
     data = parse_data(args.data) if "data" in args else None
 
     loop = asyncio.get_event_loop()
-    if "username" in args and "password" in args:
+    if args.username and args.password:
         client = loop.run_until_complete(
             TortoiseClient.create(args.url, args.username, args.password))
     else:
