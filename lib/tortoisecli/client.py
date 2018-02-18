@@ -35,12 +35,14 @@ class TortoiseClient(object):
                     if 'token' in (await response.json()).keys():
                         token = (await response.json())['token']
                         return token
-                raise GetTokenError(response)
+                raise GetTokenError(await response.json())
 
     async def api_call(self, command, resource, data=None):
-        if command in ["create", "get"]:
-            return await self._api_call(METHODS[command], resource + "s/",
-                                        data, expected_status=[200, 201])
+        url = resource + "s/"
+        #if command in ["edit", "delete"]:
+        #    url += self._get_id(url)
+        return await self._api_call(METHODS[command], url,
+                                    data, expected_status=[200, 201])
 
     async def _api_call(
             self, method, url, data=None, expected_status=None):
