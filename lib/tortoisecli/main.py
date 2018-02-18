@@ -2,8 +2,9 @@ import asyncio
 import logging
 
 from tortoisecli.client import TortoiseClient
-from tortoisecli.tools import parse_data
 from tortoisecli.parser import get_parser
+from tortoisecli.print import beautyPrint
+from tortoisecli.tools import parse_data
 
 
 def main():
@@ -22,11 +23,12 @@ def main():
         client = TortoiseClient.create_with_token(args.url, args.token)
 
     try:
-        task_obj = loop.create_task(
+        result = loop.run_until_complete(
             client.api_call(args.command, args.resource, data))
-        loop.run_until_complete(task_obj)
     finally:
         loop.close()
+
+    beautyPrint.print(result, args.resource)
 
 
 def setup_logging_level(verbose):

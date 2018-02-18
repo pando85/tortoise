@@ -50,7 +50,7 @@ class TortoiseClient(object):
         response = await self._request(method, url, data, header)
         if response.status not in expected_status:
             raise ExpectedStatusError(await response.json())
-        return response
+        return await response.json()
 
     async def _request(self, method, url, data, header):
         logging.debug("Method: %s, url: %s, data: %s, header: %s",
